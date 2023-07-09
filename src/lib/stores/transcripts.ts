@@ -34,122 +34,129 @@ const createTranscripts = () => {
 		});
 	};
 
+	const createFromFile = async (file: MediaFile) => {
+		update((t) => {
+			if (t.list.has(file.path)) {
+				console.info('Already uploaded this file');
+				return t;
+			}
+
+			t.list.set(file.path, {
+				file,
+				name: file.name,
+				status: 'empty',
+				rawOutput: [],
+				editedOutput: [],
+				duration: null
+			});
+			return t;
+		});
+
+		transcripts.calculateDuration(file);
+	}
+
+	const close = (file: MediaFile) => {
+		update((t) => {
+			t.list.delete(file.path);
+			return t;
+		});
+	}
+
+	const setStatus = (file: MediaFile, status: Transcript['status']) => {
+		update((t) => {
+			const found = t.list.get(file.path);
+			if (!found) return t;
+			found.status = status;
+			return t;
+		});
+	}
+
+	const setName = (file: MediaFile, name: string) => {
+		update((t) => {
+			const found = t.list.get(file.path);
+			if (!found) return t;
+			found.name = name;
+			return t;
+		});
+	}
+
+	const setActive = (file: MediaFile) => {
+		update((t) => {
+			if (t.list.has(file.path)) {
+				t.active = file.path;
+			}
+			return t;
+		});
+	}
+
+	const calculateDuration = async (file: MediaFile) => {
+		try {
+			const duration = await getDuration(file);
+
+			update((t) => {
+				const found = t.list.get(file.path);
+				if (!found) return t;
+				found.duration = duration;
+				return t;
+			});
+		} catch (e) {
+			console.error(e);
+			update((t) => {
+				const found = t.list.get(file.path);
+				if (!found) return t;
+				found.status = 'error';
+				found.duration = 0;
+				return t;
+			});
+		}
+	}
+
+	const startTranscription = async (file: MediaFile) => {
+		update((t) => {
+			const found = t.list.get(file.path);
+			if (!found) return t;
+			found.status = 'transcribing';
+			return t;
+		});
+
+		try {
+			await create16bitWav(file);
+
+			// Kick off creating the audio Blob Url but don't wait for it
+			createAudioBlobUrl(file);
+
+			const output = await loadTranscription(file);
+
+			update((t) => {
+				const found = t.list.get(file.path);
+				if (!found) return t;
+				found.status = 'transcribed';
+				found.rawOutput = output;
+				found.editedOutput = output;
+				return t;
+			});
+		} catch (e) {
+			console.log(e);
+			update((t) => {
+				const found = t.list.get(file.path);
+				if (!found) return t;
+				found.status = 'error';
+				return t;
+			});
+		}
+	}
+
 	return {
 		update,
 		subscribe,
 		set,
-		createFromFile: async (file: MediaFile) => {
-			update((t) => {
-				if (t.list.has(file.path)) {
-					console.info('Already uploaded this file');
-					return t;
-				}
-
-				t.list.set(file.path, {
-					file,
-					name: file.name,
-					status: 'empty',
-					rawOutput: [],
-					editedOutput: [],
-					duration: null
-				});
-				return t;
-			});
-
-			transcripts.calculateDuration(file);
-		},
-
-		close: (file: MediaFile) => {
-			update((t) => {
-				t.list.delete(file.path);
-				return t;
-			});
-		},
-
-		setStatus: (file: MediaFile, status: Transcript['status']) => {
-			update((t) => {
-				const found = t.list.get(file.path);
-				if (!found) return t;
-				found.status = status;
-				return t;
-			});
-		},
-
-		setName: (file: MediaFile, name: string) => {
-			update((t) => {
-				const found = t.list.get(file.path);
-				if (!found) return t;
-				found.name = name;
-				return t;
-			});
-		},
-
-		setActive: (file: MediaFile) => {
-			update((t) => {
-				if (t.list.has(file.path)) {
-					t.active = file.path;
-				}
-				return t;
-			});
-		},
-
-		calculateDuration: async (file: MediaFile) => {
-			try {
-				const duration = await getDuration(file);
-
-				update((t) => {
-					const found = t.list.get(file.path);
-					if (!found) return t;
-					found.duration = duration;
-					return t;
-				});
-			} catch (e) {
-				console.error(e);
-				update((t) => {
-					const found = t.list.get(file.path);
-					if (!found) return t;
-					found.status = 'error';
-					found.duration = 0;
-					return t;
-				});
-			}
-		},
-
-		startTranscription: async (file: MediaFile) => {
-			update((t) => {
-				const found = t.list.get(file.path);
-				if (!found) return t;
-				found.status = 'transcribing';
-				return t;
-			});
-
-			try {
-				await create16bitWav(file);
-
-				// Kick off creating the audio Blob Url but don't wait for it
-				createAudioBlobUrl(file);
-
-				const output = await loadTranscription(file);
-
-				update((t) => {
-					const found = t.list.get(file.path);
-					if (!found) return t;
-					found.status = 'transcribed';
-					found.rawOutput = output;
-					found.editedOutput = output;
-					return t;
-				});
-			} catch (e) {
-				console.log(e);
-				update((t) => {
-					const found = t.list.get(file.path);
-					if (!found) return t;
-					found.status = 'error';
-					return t;
-				});
-			}
-		},
-
+		createFromFile,
+		close,
+		setStatus,
+		setName,
+		setActive,
+		calculateDuration,
+		startTranscription,
 		createAudioBlobUrl
 	};
 };
