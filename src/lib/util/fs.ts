@@ -28,13 +28,29 @@ export async function getRecordingsDir() {
 	return (await appCacheDir()) + RECORDINGS_DIR + '/';
 }
 
+const audioExtensions = ['wav', 'mp3', 'aac', 'aif'];
+const videoExtensions = ['mp4', 'mov', 'wmv', 'avi', 'webm'];
+const extensions = audioExtensions.concat(videoExtensions);
+
+export function getFileType(pathname: string) {
+	return pathname.substring(pathname.lastIndexOf('.') + 1);
+}
+
+export function isAudio(pathname: string) {
+	return audioExtensions.includes(getFileType(pathname));
+}
+
+export function isVideo(pathname: string) {
+	return videoExtensions.includes(getFileType(pathname));
+}
+
 export async function openMediaFile() {
 	const opened = (await open({
 		multiple: false,
 		filters: [
 			{
 				name: 'Media',
-				extensions: ['wav', 'mp3', 'aif', 'mp4', 'aac', 'mov', 'wmv', 'avi', 'webm']
+				extensions,
 			}
 		]
 	})) as string | null;

@@ -8,10 +8,12 @@
 	{#if $active}
 		{@const { status, file, editedOutput, name } = $active}
 		{#if status === 'transcribed'}
-			<h2>{name}</h2>
-			{#each editedOutput as line, index}
-				<Line {line} {file} {index} />
-			{/each}
+			<div class="transcribed-lines">
+				<h2>{name}</h2>
+				{#each editedOutput as line, index}
+					<Line {line} {file} {index} />
+				{/each}
+			</div>
 		{:else}
 			<div class="transcribe-ready">
 				{#if status === 'empty'}
@@ -33,9 +35,6 @@
 	.content-pane {
 		background: var(--neutral-200);
 		grid-area: main;
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
 		flex-grow: 1;
 		padding: 0;
 		overflow-y: scroll;
