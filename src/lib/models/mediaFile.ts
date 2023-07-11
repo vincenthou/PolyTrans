@@ -30,6 +30,10 @@ export class MediaFile {
 		return decodeURI(this.url.pathname);
 	}
 
+	get audioPath() {
+		return decodeURI(this.transformedPath);
+	}
+
 	static async create(path: string) {
 		const waveDir = await getWaveDir();
 		return new MediaFile(path, waveDir);

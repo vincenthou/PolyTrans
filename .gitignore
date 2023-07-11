@@ -31,3 +31,5 @@ src-tauri/target
 .env
 .env.*
 !.env.example
+binaries
+*.dll

@@ -2,43 +2,32 @@
 	import { playback } from '$lib/stores/playback';
 	import { parseRawOutput } from '$lib/util/timecode';
 	import Play from 'svelte-icons/fa/FaPlay.svelte';
-	import { onMount } from 'svelte/internal';
 	export let line: string;
-	let textEl: HTMLElement;
-	let height = 0;
 
-	onMount(() => {
-		setHeight();
-		textEl.addEventListener('input', setHeight);
-		return () => textEl.removeEventListener('input', setHeight);
-	});
-
-	function setHeight() {
-		height = textEl.scrollHeight;
-	}
-
-	$: ({ start, end, text, startSeconds, endSeconds } = parseRawOutput(line));
-	$: active = $playback.currentTime > startSeconds && $playback.currentTime < endSeconds;
+	$: ({ start, end, text, isEmpty, startSeconds, endSeconds } = parseRawOutput(line));
 	$: editedText = text.trim();
+	$: active = $playback.currentTime > startSeconds && $playback.currentTime < endSeconds;
 	function handleSeek() {
 		$playback.currentTime = startSeconds;
 		$playback.paused = false;
 	}
 </script>
 
-<div class="line" class:active>
-	<span class="timestamp">
-		{start.hoursStr}:{start.minutesStr}:{start.secondsStr} → {end.hoursStr}:{end.minutesStr}:{end.secondsStr}
-	</span>
+{#if isEmpty === false}
+	<div class="line" class:active>
+		<span class="timestamp">
+			{start.hoursStr}:{start.minutesStr}:{start.secondsStr} → {end.hoursStr}:{end.minutesStr}:{end.secondsStr}
+		</span>
 
-	<textarea class="text" style="height: {height}px" value={editedText} bind:this={textEl} />
+		<textarea class="text" value={editedText} />
 
-	<div class="menu">
-		<button class="line-button" on:click={handleSeek}>
-			<Play />
-		</button>
+		<div class="menu">
+			<button class="line-button" on:click={handleSeek}>
+				<Play />
+			</button>
+		</div>
 	</div>
-</div>
+{/if}
 
 <style>
 	.line {
@@ -78,6 +67,7 @@
 	}
 
 	.text {
+		height: 22px;
 		color: var(--neutral-900);
 		flex-grow: 1;
 		display: inline-block;

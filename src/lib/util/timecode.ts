@@ -55,6 +55,7 @@ ${start.hoursStr}:${start.minutesStr}:${start.secondsStr} --> ${end.hoursStr}:${
 		vtt,
 		text,
 		startSeconds: timeDataToSeconds(start),
-		endSeconds: timeDataToSeconds(end)
+		endSeconds: timeDataToSeconds(end),
+		isEmpty: text.trim() === '[BLANK_AUDIO]'
 	};
 }

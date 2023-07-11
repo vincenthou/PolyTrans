@@ -183,7 +183,7 @@ export const active = derived(transcripts, ($t) => {
  */
 export const output = derived(active, ($active) => {
 	if (!$active) return { text: '', vtt: '' };
-	const parsed = $active.rawOutput.map(parseRawOutput);
+	const parsed = $active.rawOutput.map(parseRawOutput).filter(item => !item.isEmpty);
 	return {
 		text: parsed.map(({ text }) => text).join('\n'),
 		vtt: `WEBVTT - ${$active.file.fileName}` + parsed.map(({ vtt }) => vtt).join()

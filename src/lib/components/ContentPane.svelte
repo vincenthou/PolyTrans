@@ -15,7 +15,7 @@
 		{:else}
 			<div class="transcribe-ready">
 				{#if status === 'empty'}
-					File ready to be transcribed
+					File ready to be transcribed, audio file will be stored here: {file.audioPath}
 					<Button on:click={() => transcripts.startTranscription(file)}>Start Transcribing</Button>
 				{:else if status === 'error'}
 					Something went wrong

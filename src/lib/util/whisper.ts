@@ -6,6 +6,7 @@ import { Command } from '@tauri-apps/api/shell';
  * Runs the whisper model on a file and returns the output in vtt format
  */
 export async function loadTranscription(file: MediaFile): Promise<string[]> {
+	// TODO: support different models
 	const modelPath = await resolveResource('resources/models/ggml-base.en.bin');
 	const transcribe = Command.sidecar('binaries/whisper', [
 		'-m',
@@ -19,7 +20,8 @@ export async function loadTranscription(file: MediaFile): Promise<string[]> {
 		transcribe.stderr.on('data', (error) => console.error(error));
 		transcribe.stdout.on('data', (line) => {
 			// Filter any empty lines
-			if (line) output.push(line);
+			const newLine = line.replace('>> ', '')
+			if (newLine && newLine !== '\r') output.push(newLine);
 		});
 		transcribe.on('error', reject);
 		transcribe.on('close', () => resolve(output));

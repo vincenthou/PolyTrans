@@ -8,7 +8,7 @@ export async function create16bitWav(file: MediaFile): Promise<void> {
 	const ffmpeg = Command.sidecar('binaries/ffmpeg', [
 		'-y',
 		'-i',
-		file.path,
+		file.originalPath || file.path,
 		'-ar',
 		'16000',
 		'-ac',
@@ -34,7 +34,7 @@ export async function getDuration(
 ): Promise<number> {
 	const args = [
 		'-i',
-		file.path,
+		file.originalPath || file.path,
 		'-show_entries',
 		'format=duration',
 		'-of',

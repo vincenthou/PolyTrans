@@ -16,7 +16,10 @@
 				"readFile": true,
 				"writeFile": true,
 				"createDir": true,
-				"scope": ["$RESOURCE/*", "$APPCACHE/*"]
+				"scope": [
+					"$RESOURCE/*",
+					"$APPCACHE/*"
+				]
 			},
 			"os": {
 				"all": true
@@ -60,8 +63,15 @@
 			"deb": {
 				"depends": []
 			},
-			"externalBin": ["binaries/whisper", "binaries/ffmpeg", "binaries/ffprobe"],
-			"resources": ["resources/*"],
+			"externalBin": [
+				"binaries/whisper",
+				"binaries/ffmpeg",
+				"binaries/ffprobe"
+			],
+			"resources": [
+				"resources/*",
+				"./whisper.dll"
+			],
 			"icon": [
 				"icons/32x32.png",
 				"icons/128x128.png",
@@ -69,7 +79,7 @@
 				"icons/icon.icns",
 				"icons/icon.ico"
 			],
-			"identifier": "com.bitsbybrandon.dev",
+			"identifier": "pytrans",
 			"longDescription": "",
 			"macOS": {
 				"entitlements": null,
