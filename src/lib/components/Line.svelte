@@ -1,25 +1,41 @@
 <script lang="ts">
+	import { transcripts } from '$lib/stores/transcripts';
 	import { playback } from '$lib/stores/playback';
-	import { parseRawOutput } from '$lib/util/timecode';
+	import { parseRawOutput, getTimeRangeString } from '$lib/util/timecode';
 	import Play from 'svelte-icons/fa/FaPlay.svelte';
+	import type { MediaFile } from '$lib/models/mediaFile';
 	export let line: string;
+	export let file: MediaFile;
+	export let index: number;
 
 	$: ({ start, end, text, isEmpty, startSeconds, endSeconds } = parseRawOutput(line));
 	$: editedText = text.trim();
 	$: active = $playback.currentTime > startSeconds && $playback.currentTime < endSeconds;
+	function handleJump() {
+		$playback.currentTime = startSeconds;
+		$playback.paused = true;
+	}
 	function handleSeek() {
 		$playback.currentTime = startSeconds;
 		$playback.paused = false;
+	}
+	function handleTextChange(e: Event) {
+		const textareaElement = e.target as HTMLTextAreaElement;
+		transcripts.setEditedOutput(
+			file,
+			index,
+			`[${getTimeRangeString(start, end)}]   ${textareaElement.value}`
+		);
 	}
 </script>
 
 {#if isEmpty === false}
 	<div class="line" class:active>
-		<span class="timestamp">
+		<button class="timestamp" on:click={handleJump}>
 			{start.hoursStr}:{start.minutesStr}:{start.secondsStr} → {end.hoursStr}:{end.minutesStr}:{end.secondsStr}
-		</span>
+		</button>
 
-		<textarea class="text" value={editedText} />
+		<textarea class="text" value={editedText} on:change={handleTextChange} />
 
 		<div class="menu">
 			<button class="line-button" on:click={handleSeek}>
@@ -32,7 +48,7 @@
 <style>
 	.line {
 		display: flex;
-		padding: 0px 12px;
+		padding: 2px 12px;
 		gap: 12px;
 	}
 
@@ -45,20 +61,13 @@
 	}
 
 	.timestamp {
-		-webkit-user-select: none;
-		-webkit-touch-callout: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-
+		cursor: pointer;
 		flex-shrink: 0;
-		pointer-events: none;
 		text-align: center;
 		justify-self: flex-start;
 		align-self: flex-start;
 		display: inline-block;
 		padding: 4px;
-		margin-top: 3px;
 		border-radius: 5px;
 		background-color: var(--neutral-300);
 		color: var(--neutral-600);

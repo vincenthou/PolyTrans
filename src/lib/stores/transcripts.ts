@@ -146,6 +146,15 @@ const createTranscripts = () => {
 		}
 	}
 
+	const setEditedOutput = (file: MediaFile, index: number, text: string) => {
+		update((t) => {
+			const found = t.list.get(file.path);
+			if (!found) return t;
+			found.editedOutput[index] = text;
+			return t;
+		});
+	}
+
 	return {
 		update,
 		subscribe,
@@ -157,7 +166,8 @@ const createTranscripts = () => {
 		setActive,
 		calculateDuration,
 		startTranscription,
-		createAudioBlobUrl
+		createAudioBlobUrl,
+		setEditedOutput
 	};
 };
 

@@ -37,6 +37,10 @@ export function timeDataToSeconds(time: TimeData) {
 	return time.hours * 3600 + time.minutes * 60 + time.seconds;
 }
 
+export function getTimeRangeString(start: TimeData, end: TimeData) {
+	return `${start.hoursStr}:${start.minutesStr}:${start.secondsStr} --> ${end.hoursStr}:${end.minutesStr}:${end.secondsStr}`
+}
+
 export function parseRawOutput(raw: string) {
 	const timestampRegex = /(\d\d):(\d\d):(\d\d)/g;
 	const timestamp = raw.substring(0, raw.indexOf(']'));
@@ -46,7 +50,7 @@ export function parseRawOutput(raw: string) {
 	const end = timecodeToTimeData(match[1]);
 	const vtt = `
 
-${start.hoursStr}:${start.minutesStr}:${start.secondsStr} --> ${end.hoursStr}:${end.minutesStr}:${end.secondsStr}
+${getTimeRangeString(start, end)}
 - ${text}`;
 
 	return {

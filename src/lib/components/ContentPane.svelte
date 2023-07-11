@@ -6,11 +6,11 @@
 
 <div class="content-pane">
 	{#if $active}
-		{@const { status, file, rawOutput, name } = $active}
+		{@const { status, file, editedOutput, name } = $active}
 		{#if status === 'transcribed'}
 			<h2>{name}</h2>
-			{#each rawOutput as line}
-				<Line {line} />
+			{#each editedOutput as line, index}
+				<Line {line} {file} {index} />
 			{/each}
 		{:else}
 			<div class="transcribe-ready">

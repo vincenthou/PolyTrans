@@ -2,7 +2,7 @@ import { MediaFile } from '$lib/models/mediaFile';
 import { transcripts } from '$lib/stores/transcripts';
 import { fs } from '@tauri-apps/api';
 import { appCacheDir } from '@tauri-apps/api/path';
-import { ensureWaveDir, getWaveDir } from './fs';
+import { getWaveDir } from './fs';
 
 const SAVE_FILE = 'save-data.json';
 
@@ -18,6 +18,7 @@ export async function loadFromCache() {
 		const waveDir = await getWaveDir();
 		const text = await fs.readTextFile(cacheDir + SAVE_FILE);
 		const data = JSON.parse(text);
+		console.debug('loaded data:', data)
 		const transformed = data.map((transcript: any) => {
 			const file = new MediaFile(transcript.file.originalPath, waveDir);
 			// Kick off creating the audio Blob Url but don't wait for it
