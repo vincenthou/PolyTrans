@@ -19,8 +19,12 @@ Using cpp binaries for Whisper from [whisper.cpp](https://github.com/ggerganov/w
 - [x] Upload video
 - [x] Drag and drop
 - [x] Start audio playback from line
+- [x] Extract bin and model for source code
+- [x] Preview the video file
+- [ ] Support editing the transcribed text
+- [ ] Make external bin and model downloadable in app
 - [ ] Record mic audio directly
+- [ ] Support i18n
 - [ ] Apple Silicon, Linux, and Windows binaries
-- [ ] Editable text 
 - [ ] Event and errors show in UI 
 - [ ] Prediction accuracy 
