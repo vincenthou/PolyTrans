@@ -36,9 +36,8 @@
 				/>
 			</video>
 		{:else}
-			<!-- TODO use convertFileSrc rather than blobUrl -->
 			<audio
-				src={$active.file.blobUrl || ''}
+				src={convertFileSrc($active.file.originalPath || $active.file.transformedPath)}
 				controls
 				bind:currentTime={$playback.currentTime}
 				bind:paused={$playback.paused}
@@ -80,19 +79,21 @@
 		-webkit-backdrop-filter: blur(7px);
 	}
 
-	video {
+	video,
+	audio {
 		width: 100%;
 	}
 
+	audio {
+		margin-top: 40px;
+	}
+
 	.button-groups {
+		width: 100%;
+		margin-top: 10px;
 		display: flex;
 		gap: 5px;
 		align-items: center;
-	}
-
-	audio {
-		margin-right: auto;
-		max-width: 600px;
-		flex-grow: 1;
+		justify-content: left;
 	}
 </style>

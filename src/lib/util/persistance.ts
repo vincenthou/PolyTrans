@@ -31,10 +31,6 @@ export async function loadFromCache() {
 			return t;
 		});
 
-		// Start generating audio blobs
-		transformed.forEach(([_, t]) => {
-			transcripts.createAudioBlobUrl(t.file);
-		});
 	} catch {
 		console.info('No available cache');
 		transcripts.update((t) => {

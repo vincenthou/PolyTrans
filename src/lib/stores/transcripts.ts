@@ -22,18 +22,6 @@ const createTranscripts = () => {
 	};
 	const { subscribe, update, set } = writable<Transcripts>(initialValue);
 
-	const createAudioBlobUrl = async (file: MediaFile) => {
-		if (file.blobUrl) return;
-		const blobUrl = await createAudioUrlFromFile(file);
-
-		update((t) => {
-			const found = t.list.get(file.path);
-			if (!found) return t;
-			found.file.blobUrl = blobUrl;
-			return t;
-		});
-	};
-
 	const createFromFile = async (file: MediaFile) => {
 		update((t) => {
 			if (t.list.has(file.path)) {
@@ -122,9 +110,6 @@ const createTranscripts = () => {
 		try {
 			await create16bitWav(file);
 
-			// Kick off creating the audio Blob Url but don't wait for it
-			createAudioBlobUrl(file);
-
 			const output = await loadTranscription(file);
 
 			update((t) => {
@@ -166,7 +151,6 @@ const createTranscripts = () => {
 		setActive,
 		calculateDuration,
 		startTranscription,
-		createAudioBlobUrl,
 		setEditedOutput
 	};
 };

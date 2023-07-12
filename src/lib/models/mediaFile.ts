@@ -3,7 +3,6 @@ import { getWaveDir } from '$lib/util/fs';
 export class MediaFile {
 	url: URL;
 	readonly transformedPath: string;
-	blobUrl: string | null = null;
 	originalPath: string;
 
 	constructor(path: string, transformedPathDir: string) {
