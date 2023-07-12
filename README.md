@@ -20,7 +20,7 @@ Using cpp binaries for Whisper from [whisper.cpp](https://github.com/ggerganov/w
 - [x] Drag and drop
 - [x] Start audio playback from line
 - [x] Extract bin and model for source code
-- [x] Preview the video file
+- [x] Preview the video file with transcribed vtt file
 - [ ] Support editing the transcribed text
 - [ ] Make external bin and model downloadable in app
 - [ ] Record mic audio directly

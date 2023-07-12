@@ -1,25 +1,20 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/Sidebar.svelte';
-	import ContentPane from '$lib/components/ContentPane.svelte';
-	import PreviewPanel from '$lib/components/PreviewPanel.svelte';
+	import MainPanel from '$lib/components/MainPanel.svelte';
+	import NotePanel from '$lib/components/NotePanel.svelte';
 	import DeviceSelectionModal from '$lib/components/DeviceSelectionModal.svelte';
 </script>
 
 <main>
 	<Sidebar />
-	<PreviewPanel />
-	<ContentPane />
+	<MainPanel />
+	<NotePanel />
 	<DeviceSelectionModal />
 </main>
 
 <style>
 	main {
-		display: grid;
-		grid-template-rows: 1fr min-content;
-		grid-template-columns: 240px 1fr 1fr;
-		grid-template-areas:
-			'side preview main'
-			'side preview main';
+		display: flex;
 		height: 100%;
 	}
 </style>

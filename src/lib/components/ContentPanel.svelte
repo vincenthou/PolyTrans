@@ -4,12 +4,11 @@
 	import Button from './Button.svelte';
 </script>
 
-<div class="content-pane">
+<div class="content-panel">
 	{#if $active}
-		{@const { status, file, editedOutput, name } = $active}
+		{@const { status, file, editedOutput } = $active}
 		{#if status === 'transcribed'}
 			<div class="transcribed-lines">
-				<h2>{name}</h2>
 				{#each editedOutput as line, index}
 					<Line {line} {file} {index} />
 				{/each}
@@ -17,7 +16,7 @@
 		{:else}
 			<div class="transcribe-ready">
 				{#if status === 'empty'}
-					File ready to be transcribed, audio file will be stored here: {file.audioPath}
+					<p>File ready to be transcribed, audio file will be stored here: {file.audioPath}</p>
 					<Button on:click={() => transcripts.startTranscription(file)}>Start Transcribing</Button>
 				{:else if status === 'error'}
 					Something went wrong
@@ -32,30 +31,21 @@
 </div>
 
 <style>
-	.content-pane {
-		background: var(--neutral-200);
-		grid-area: main;
-		flex-grow: 1;
-		padding: 0;
-		overflow-y: scroll;
+	.content-panel {
+		width: 100%;
+		height: 100%;
+		overflow-y: auto;
+		overflow-x: hidden;
 		position: relative;
 	}
 
 	.transcribe-ready {
 		display: flex;
-		align-items: center;
 		flex-direction: column;
-		gap: 12px;
-		width: 300px;
-		margin: auto;
-	}
-	h2 {
-		margin: 24px 0 0;
-		padding: 12px;
-		position: sticky;
-		top: 0;
-		background-color: rgba(31, 31, 31, 0.6);
-		backdrop-filter: blur(7px);
-		-webkit-backdrop-filter: blur(7px);
+		gap: 20px;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		height: 100%;
 	}
 </style>

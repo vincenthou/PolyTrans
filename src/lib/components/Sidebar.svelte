@@ -50,12 +50,13 @@
 
 <style>
 	.sidebar {
-		grid-area: side;
+		width: 240px;
 		padding: 48px 12px;
 		background: var(--neutral-300);
 		border-right: 1px solid var(--neutral-400);
 		position: relative;
-		overflow: scroll;
+		overflow-y: auto;
+		overflow-x: clip;
 	}
 
 	.menu {

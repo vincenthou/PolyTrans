@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { autoresize } from 'svelte-textarea-autoresize';
 	import { transcripts } from '$lib/stores/transcripts';
 	import { playback } from '$lib/stores/playback';
 	import { parseRawOutput, getTimeRangeString } from '$lib/util/timecode';
 	import Play from 'svelte-icons/fa/FaPlay.svelte';
+	import Pause from 'svelte-icons/fa/FaPause.svelte';
 	import type { MediaFile } from '$lib/models/mediaFile';
 	export let line: string;
 	export let file: MediaFile;
@@ -17,7 +19,7 @@
 	}
 	function handleSeek() {
 		$playback.currentTime = startSeconds;
-		$playback.paused = false;
+		$playback.paused = !$playback.paused;
 	}
 	function handleTextChange(e: Event) {
 		const textareaElement = e.target as HTMLTextAreaElement;
@@ -35,11 +37,17 @@
 			{start.hoursStr}:{start.minutesStr}:{start.secondsStr} → {end.hoursStr}:{end.minutesStr}:{end.secondsStr}
 		</button>
 
-		<textarea class="text" value={editedText} on:change={handleTextChange} />
+		<div class="text">
+			<textarea use:autoresize value={editedText} on:change={handleTextChange} />
+		</div>
 
 		<div class="menu">
 			<button class="line-button" on:click={handleSeek}>
-				<Play />
+				{#if $playback.paused === true}
+					<Play />
+				{:else}
+					<Pause />
+				{/if}
 			</button>
 		</div>
 	</div>
@@ -61,6 +69,7 @@
 	}
 
 	.timestamp {
+		width: 125px;
 		cursor: pointer;
 		flex-shrink: 0;
 		text-align: center;
@@ -76,19 +85,22 @@
 	}
 
 	.text {
-		height: 22px;
+		flex: 1;
+	}
+
+	textarea {
+		width: 100%;
 		color: var(--neutral-900);
-		flex-grow: 1;
 		display: inline-block;
 		appearance: none;
 		background: transparent;
 		border: 0;
 		font-size: 15px;
 		text-align: left;
-		resize: none;
 	}
 
 	.menu {
+		width: 18px;
 		opacity: 0;
 		flex-shrink: 0;
 	}

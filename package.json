@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.1.0",
-    "svelte-icons": "^2.1.0"
+    "svelte-icons": "^2.1.0",
+    "svelte-textarea-autoresize": "^1.0.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
